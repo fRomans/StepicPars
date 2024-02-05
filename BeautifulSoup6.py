@@ -80,7 +80,7 @@ pagen = [link['href'] for link in soup.find('div', class_='pagen').find_all('a')
 # Инициализируем список для хранения абсолютных URL-адресов
 list_link = []
 
-# Задаем схему URL-адреса, которая будет использоваться для преобразования относительных путей в абсолютные URL
+# Задаем схему URL-адреса, которая будет использоваться для преобразования относительных путей к странице в абсолютные URL
 schema = 'https://parsinger.ru/html/'
 
 # Цикл по всем найденным ссылкам для преобразования их в абсолютные URL-адреса
@@ -89,17 +89,31 @@ for link in pagen:
 
 # тут я нашел ссылки на все страницы
 
-# ссылки на конкретные мышки
-list_link_on_mouse = []
-
-# Задаем схему URL-адреса, которая будет использоваться для преобразования относительных путей в абсолютные URL
-schema = 'https://parsinger.ru/html/mouse/3/'
+# ссылки на все мышки
+list_link_on_mouses = []
 
 for stranica in list_link:
     response = requests.get(url=stranica)
     response.encoding = 'utf-8'
     soup = BeautifulSoup(response.text, 'lxml')
-    pagen1 = [link['href'] for link in soup.find('div', class_='sale_button').find_all('a')]
-    for link in pagen1:
-        list_link_on_mouse.append(f"{schema}{link}")
-print(list_link_on_mouse)
+    # ищем все div+классы с необходимыми ссылками
+    pagen1 = soup.findAll('div', class_='sale_button')
+    for link_mouse in pagen1:
+        # получаем все ссылки и пишем в массив
+        list_link_on_mouses.append(link_mouse.find('a')['href'])
+
+# ссылка на каждую мышку
+list_link_single_mouse = []
+for link_single_mouse in list_link_on_mouses:
+    list_link_single_mouse.append(f"{schema}{link_single_mouse}")
+
+sum = 0
+for link_single in list_link_single_mouse:
+    url = link_single
+    response = requests.get(url=url)
+    response.encoding = 'utf-8'
+    soup = BeautifulSoup(response.text, 'lxml')
+    e = str(soup.find('p', class_='article').text).replace('Артикул: ', "")
+    ee = int(e)
+    sum += ee
+print(sum)
