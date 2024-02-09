@@ -192,7 +192,46 @@ from bs4 import BeautifulSoup
 # Отфильтровать и извлечь все уникальные числа, исключая числа в заголовке таблицы.
 # Посчитать сумму этих чисел.
 
-url = 'https://parsinger.ru/table/1/index.html'
+# url = 'https://parsinger.ru/table/1/index.html'
+# response = requests.get(url)
+# response.encoding = 'utf-8'
+# soup = BeautifulSoup(response.text, 'html.parser')
+#
+# # Ищем первую таблицу на странице
+# table = soup.find('table')
+#
+# # Извлекаем все строки таблицы
+# rows = table.find_all('tr')
+#
+# all_td = []
+#
+# # Проходим по строкам таблицы, начиная со второй (индекс 1), так как первая строка - это заголовки
+# for row in rows[1:]:
+#     # Извлекаем ячейки текущей строки
+#     columns = row.find_all(['td'])
+#
+#     # 15 столбцов . columns[i]- это весь столбец до низа
+#     for i in range(15):
+#         chis = float(columns[i].text)
+#         all_td.append(chis)
+#
+# unique = []
+# #  проход по значениям
+# for number in all_td:
+#     #  берем только те, которых нет в массиве(уникальные)
+#     if number not in unique:
+#         unique.append(number)
+#
+# sum = 0
+# for n in unique:
+#     sum = sum+n
+# print(sum)
+
+# __________________________________________
+# Задача: Произвести парсинг данных из первого столбца таблицы.
+# Суммировать все числа, найденные в первом столбце.
+
+url = 'https://parsinger.ru/table/2/index.html'
 response = requests.get(url)
 response.encoding = 'utf-8'
 soup = BeautifulSoup(response.text, 'html.parser')
@@ -202,27 +241,13 @@ table = soup.find('table')
 
 # Извлекаем все строки таблицы
 rows = table.find_all('tr')
-
-all_td = []
+sum: int = 0
 
 # Проходим по строкам таблицы, начиная со второй (индекс 1), так как первая строка - это заголовки
 for row in rows[1:]:
     # Извлекаем ячейки текущей строки
     columns = row.find_all(['td'])
-
-    # 15 столбцов . columns[i]- это весь столбец до низа
-    for i in range(15):
-        chis = float(columns[i].text)
-        all_td.append(chis)
-
-unique = []
-#  проход по значениям
-for number in all_td:
-    #  берем только те, которых нет в массиве(уникальные)
-    if number not in unique:
-        unique.append(number)
-
-sum = 0
-for n in unique:
-    sum = sum+n
+    el = columns[0].text
+    el = float(el)
+    sum += el
 print(sum)
