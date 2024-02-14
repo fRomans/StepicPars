@@ -231,7 +231,121 @@ from bs4 import BeautifulSoup
 # Задача: Произвести парсинг данных из первого столбца таблицы.
 # Суммировать все числа, найденные в первом столбце.
 
-url = 'https://parsinger.ru/table/2/index.html'
+# url = 'https://parsinger.ru/table/2/index.html'
+# response = requests.get(url)
+# response.encoding = 'utf-8'
+# soup = BeautifulSoup(response.text, 'html.parser')
+#
+# # Ищем первую таблицу на странице
+# table = soup.find('table')
+#
+# # Извлекаем все строки таблицы
+# rows = table.find_all('tr')
+# sum: int = 0
+#
+# # Проходим по строкам таблицы, начиная со второй (индекс 1), так как первая строка - это заголовки
+# for row in rows[1:]:
+#     # Извлекаем ячейки текущей строки
+#     columns = row.find_all(['td'])
+#     el = columns[0].text
+#     el = float(el)
+#     sum += el
+# print(sum)
+
+# __________________________________________
+# Задача:Cобрать только числа, отформатированные жирным шрифтом.
+# .find('b')
+# или
+# .find_all('b')
+# Суммировать выделенные числа.
+
+# url = 'https://parsinger.ru/table/3/index.html'
+# response = requests.get(url)
+# response.encoding = 'utf-8'
+# soup = BeautifulSoup(response.text, 'html.parser')
+#
+# # Ищем первую таблицу на странице
+# table = soup.find('table')
+#
+# # Извлекаем все строки таблицы
+# rows = table.find_all('tr')
+#
+# sum: int = 0
+# # Проходим по строкам таблицы, начиная со второй (индекс 1), так как первая строка - это заголовки
+# for row in rows[1:]:
+#     columns =row.find_all('td')
+#
+#     for i in columns:
+#         d = i.find('b')
+#         if d!= None:
+#           d = d.text
+#           d = float(d)
+#           sum += d
+# print(sum)
+
+# __________________________________________
+# Задача:Выделить и подсчитать сумму всех чисел из зелёных ячеек.
+# Внести полученную сумму в поле ответа.
+
+# url = 'https://parsinger.ru/table/4/index.html'
+# response = requests.get(url)
+# response.encoding = 'utf-8'
+# soup = BeautifulSoup(response.text, 'html.parser')
+#
+# # Ищем первую таблицу на странице
+# table = soup.find('table')
+#
+# # Извлекаем все строки таблицы
+# rows = table.find_all('tr')
+#
+# sum: int = 0
+# # Проходим по строкам таблицы, начиная со второй (индекс 1), так как первая строка - это заголовки
+# for row in rows[1:]:
+#     columns =row.find_all('td', class_="green")
+#
+#     for i in columns:
+#         d = i
+#         d = d.text
+#         d = float(d)
+#         sum += d
+# print(sum)
+
+# __________________________________________
+# Задача: Для каждой строки таблицы найти числа в оранжевой и голубой ячейках, после чего умножить их друг на друга.
+# Сложить все получившиеся произведения, чтобы получить общую сумму.
+
+# url = 'https://parsinger.ru/table/5/index.html'
+# response = requests.get(url)
+# response.encoding = 'utf-8'
+# soup = BeautifulSoup(response.text, 'html.parser')
+#
+# # Ищем первую таблицу на странице
+# table = soup.find('table')
+#
+# # Извлекаем все строки таблицы
+# rows = table.find_all('tr')
+#
+# sum: int = 0
+# # Проходим по строкам таблицы, начиная со второй (индекс 1), так как первая строка - это заголовки
+# for row in rows[1:]:
+#     columns1 =row.find('td', class_="orange")
+#     columns1 = columns1.text
+#     columns1 = float(columns1)
+#     columns2 =row.find_all(['td'])
+#     columns2 = columns2[14]
+#     columns2 = columns2.text
+#     columns2 = float(columns2)
+#     elem = float(columns1 * columns2)
+#     sum += elem
+# print(sum)
+
+# __________________________________________
+# Задача:Для каждого столбца вычислить сумму всех чисел в этом столбце.
+# Округлить каждое получившееся значение до трех знаков после запятой.
+# row: round(sum(column), 3)
+# Формировать словарь, где ключами будут названия столбцов, а значениями - рассчитанные суммы.
+
+url = 'https://parsinger.ru/table/5/index.html'
 response = requests.get(url)
 response.encoding = 'utf-8'
 soup = BeautifulSoup(response.text, 'html.parser')
@@ -241,13 +355,38 @@ table = soup.find('table')
 
 # Извлекаем все строки таблицы
 rows = table.find_all('tr')
+
+# все суммы по столбцам
+all_summ = []
 sum: int = 0
 
+for i in range(15):
 # Проходим по строкам таблицы, начиная со второй (индекс 1), так как первая строка - это заголовки
-for row in rows[1:]:
-    # Извлекаем ячейки текущей строки
-    columns = row.find_all(['td'])
-    el = columns[0].text
-    el = float(el)
-    sum += el
-print(sum)
+        for row in rows[1:]:
+            columns =row.find_all('td')
+            el = columns[i].text
+            el = float(el)
+            sum += el
+        sum = round(sum, 3)
+        all_summ.append(sum)
+        sum = 0
+# print(all_summ)
+
+all_title = []
+
+for i in range(15):
+    for row in rows[:1]:
+        columns =row.find_all('th')
+        el = str(columns[i].text)
+    all_title.append(el)
+
+# print(all_title)
+
+yyy = {}
+for i in range(15):
+    yyy[all_title[i]] = all_summ[i]
+print(yyy)
+
+
+
+
