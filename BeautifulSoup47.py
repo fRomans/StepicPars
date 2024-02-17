@@ -345,48 +345,87 @@ from bs4 import BeautifulSoup
 # row: round(sum(column), 3)
 # Формировать словарь, где ключами будут названия столбцов, а значениями - рассчитанные суммы.
 
-url = 'https://parsinger.ru/table/5/index.html'
+# url = 'https://parsinger.ru/table/5/index.html'
+# response = requests.get(url)
+# response.encoding = 'utf-8'
+# soup = BeautifulSoup(response.text, 'html.parser')
+#
+# # Ищем первую таблицу на странице
+# table = soup.find('table')
+#
+# # Извлекаем все строки таблицы
+# rows = table.find_all('tr')
+#
+# # все суммы по столбцам
+# all_summ = []
+# sum: int = 0
+#
+# for i in range(15):
+# # Проходим по строкам таблицы, начиная со второй (индекс 1), так как первая строка - это заголовки
+#         for row in rows[1:]:
+#             columns =row.find_all('td')
+#             el = columns[i].text
+#             el = float(el)
+#             sum += el
+#         sum = round(sum, 3)
+#         all_summ.append(sum)
+#         sum = 0
+# # print(all_summ)
+#
+# all_title = []
+#
+# for i in range(15):
+#     for row in rows[:1]:
+#         columns =row.find_all('th')
+#         el = str(columns[i].text)
+#     all_title.append(el)
+#
+# # print(all_title)
+#
+# yyy = {}
+# for i in range(15):
+#     yyy[all_title[i]] = all_summ[i]
+# print(yyy)
+
+# __________________________________________
+# Задача:Пройтись по каждой ячейке каждой таблицы и проверить значение на кратность трём.
+# Если число кратно трем, добавить его к общей сумме.
+
+# url = 'https://parsinger.ru/4.8/7/index.html'
+# response = requests.get(url)
+# response.encoding = 'utf-8'
+# soup = BeautifulSoup(response.text, 'html.parser')
+#
+# # Ищем первую таблицу на странице
+# tables = soup.findAll('table')
+#
+# sum = 0
+# for table in tables:
+#         rows = table.find_all('tr')
+#         for row in rows:
+#                 columns =row.find_all('td')
+#                 for column in columns:
+#                         el = column.text
+#                         el = int(el)
+#                         if el % 3 == 0:
+#                                 sum += el
+# print(sum)
+
+
+# __________________________________________
+# Задача: Извлечь данные из каждой объединённой ячейки(всего 16 ячеек), объединённую ячейку можно определить по атрибуту colspan.
+# Суммировать все числовые значения, полученные из объединённых ячеек.
+
+url = 'https://parsinger.ru/4.8/8/index.html'
 response = requests.get(url)
 response.encoding = 'utf-8'
-soup = BeautifulSoup(response.text, 'html.parser')
+soup = BeautifulSoup(response.text, 'lxml')
+tags = soup.find_all(['td', 'th'], {'colspan': True})
+sums = 0
+#  ТЕГИ БЕЗ ПЕРВОГО ТЕГА   table ( ОН НЕ ПОДХОДИТ)
+for i in tags[1:]:
+        sums += int(i.text)
 
-# Ищем первую таблицу на странице
-table = soup.find('table')
-
-# Извлекаем все строки таблицы
-rows = table.find_all('tr')
-
-# все суммы по столбцам
-all_summ = []
-sum: int = 0
-
-for i in range(15):
-# Проходим по строкам таблицы, начиная со второй (индекс 1), так как первая строка - это заголовки
-        for row in rows[1:]:
-            columns =row.find_all('td')
-            el = columns[i].text
-            el = float(el)
-            sum += el
-        sum = round(sum, 3)
-        all_summ.append(sum)
-        sum = 0
-# print(all_summ)
-
-all_title = []
-
-for i in range(15):
-    for row in rows[:1]:
-        columns =row.find_all('th')
-        el = str(columns[i].text)
-    all_title.append(el)
-
-# print(all_title)
-
-yyy = {}
-for i in range(15):
-    yyy[all_title[i]] = all_summ[i]
-print(yyy)
-
-
-
+print(sums)
+# _________________________________________________________________
 
