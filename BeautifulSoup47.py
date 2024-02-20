@@ -1,3 +1,5 @@
+import json
+
 import requests
 from bs4 import BeautifulSoup
 
@@ -416,16 +418,56 @@ from bs4 import BeautifulSoup
 # Задача: Извлечь данные из каждой объединённой ячейки(всего 16 ячеек), объединённую ячейку можно определить по атрибуту colspan.
 # Суммировать все числовые значения, полученные из объединённых ячеек.
 
-url = 'https://parsinger.ru/4.8/8/index.html'
+# url = 'https://parsinger.ru/4.8/8/index.html'
+# response = requests.get(url)
+# response.encoding = 'utf-8'
+# soup = BeautifulSoup(response.text, 'lxml')
+# tags = soup.find_all(['td', 'th'], {'colspan': True})
+# sums = 0
+# #  ТЕГИ БЕЗ ПЕРВОГО ТЕГА   table ( ОН НЕ ПОДХОДИТ)
+# for i in tags[1:]:
+#         sums += int(i.text)
+#
+# print(sums)
+
+# __________________________________________
+# Задача: Фильтруйте автомобили по заданным критериям:
+# Cтоимость не выше 4 000 000 (Стоимость авто <= 4000000),
+# Год выпуска начиная с 2005 года (Год выпуска >= 2005),
+# Тип двигателя - Бензиновый (Тип двигателя == "Бензиновый").
+# Выводите результат в формате JSON, при отправке данных в валидатор, важен каждый пробел и перенос строки.
+# Используйте эти параметры для формирования JSON
+# json.dumps(sorted_cars, indent=4, ensure_ascii=False)
+# Сортируйте отфильтрованный JSON  автомобилей по стоимости от меньшего к большему
+# sorted(filtered_cars, key=lambda x: x["Стоимость авто"])
+
+url = 'https://parsinger.ru/4.8/6/index.html'
 response = requests.get(url)
 response.encoding = 'utf-8'
 soup = BeautifulSoup(response.text, 'lxml')
-tags = soup.find_all(['td', 'th'], {'colspan': True})
-sums = 0
-#  ТЕГИ БЕЗ ПЕРВОГО ТЕГА   table ( ОН НЕ ПОДХОДИТ)
-for i in tags[1:]:
-        sums += int(i.text)
+# Ищем первую таблицу на странице
+table = soup.find('table')
 
-print(sums)
-# _________________________________________________________________
+# Извлекаем все строки таблицы
+rows = table.find_all('tr')
 
+
+all_cars = []
+for row in rows[1:]:
+    columns =row.find_all('td')
+
+    if int(columns[7].text) <= 4000000 and int(columns[1].text) >= 2005 and str(columns[4].text) == "Бензиновый":
+        resp = {}
+        resp["Марка Авто"] = str(columns[0].text).strip()
+        resp["Год выпуска"] = int(columns[1].text)
+        resp["Тип двигателя"] = str(columns[4].text).strip()
+        resp["Стоимость авто"] = int(columns[7].text)
+        all_cars.append(resp)
+
+
+all_cars.sort(key=lambda x: x["Стоимость авто"], reverse=False)
+all_cars_in_json = json.dumps(all_cars, indent=4, ensure_ascii=False)
+
+
+
+print(all_cars_in_json)
