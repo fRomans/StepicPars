@@ -122,19 +122,45 @@ with open('res.csv', 'w', encoding='utf-8-sig', newline='') as file:
 
     url = 'https://parsinger.ru/html/index4_page_1.html'
 
+# Отправляем GET-запрос к указанной странице
 response = requests.get(url=url)
-response.encoding = 'utf-8'
-soup = BeautifulSoup(response.text, 'lxml')
-pagen = [link.text for link in soup.find('div', class_='pagen').find_all('a')][-1]
 
-name = [x.text.strip() for x in soup.find_all('a', class_='name_item')]
-price = [x.text for x in soup.find_all('p', class_='price')]
-description = [x.text.split('\n') for x in soup.find_all('div', class_='description')]
+# Устанавливаем кодировку ответа сервера в UTF-8 для корректного отображения текста на кириллице
+response.encoding = 'utf-8'
+
+# Преобразуем текст ответа сервера в объект BeautifulSoup с использованием парсера 'lxml'
+soup = BeautifulSoup(response.text, 'lxml')
+
+
+pagen = [link['href'] for link in soup.find('div', class_='pagen').find_all('a')]
+schema = 'https://parsinger.ru/html/'
+
+list_link = []
+
+for link in pagen:
+     list_link.append(f"{schema}{link}")
+
+nameAll = []
+priceAll = []
+descriptionAll = []
+for stranica in list_link:
+    response = requests.get(url=stranica)
+    response.encoding = 'utf-8'
+    soup = BeautifulSoup(response.text, 'lxml')
+    for x in soup.find_all('a', class_='name_item'):
+      nameAll.append(x.text.strip())
+
+    for x in soup.find_all('p', class_='price'):
+        priceAll.append(x.text)
+
+    for x in soup.find_all('div', class_='description'):
+        descriptionAll.append(x.text.split('\n'))
+
 
 with open('res.csv', 'a', encoding='utf-8-sig', newline='') as file:
     writer = csv.writer(file, delimiter=';')
                        #zip(*iterables) --> Объект zip, создающий кортежи до тех пор, пока ввод не будет исчерпан.
-    for item, descr, price in zip(name, description, price):
+    for item, descr, price in zip(nameAll, descriptionAll, priceAll):
 
         # Формируем строку для записи                      # if x если x еще существует
         flatten = item, *[x.split(':')[1].strip() for x in descr if x], price
