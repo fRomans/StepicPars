@@ -193,7 +193,7 @@ for url in urls:
 
 
 for list_item, price_item, name in zip(descriptionAll, priceAll, nameAll):
-        
+
 
                     res.append({
                         'Наименование': name,
