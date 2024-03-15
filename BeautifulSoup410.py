@@ -144,64 +144,163 @@ import json
 # Имя файла произвольное.
 # Удалите все лишние пробелы из данных. методом .strip().
 
-url1 = 'https://parsinger.ru/html/index1_page_1.html'
-url2 = 'https://parsinger.ru/html/index2_page_1.html'
-url3 = 'https://parsinger.ru/html/index3_page_1.html'
-url4 = 'https://parsinger.ru/html/index4_page_1.html'
-url5 = 'https://parsinger.ru/html/index5_page_1.html'
-urls = [url1,url2,url3,url4,url5]
+# url1 = 'https://parsinger.ru/html/index1_page_1.html'
+# url2 = 'https://parsinger.ru/html/index2_page_1.html'
+# url3 = 'https://parsinger.ru/html/index3_page_1.html'
+# url4 = 'https://parsinger.ru/html/index4_page_1.html'
+# url5 = 'https://parsinger.ru/html/index5_page_1.html'
+# urls = [url1,url2,url3,url4,url5]
+#
+# nameAll = []
+# priceAll = []
+# descriptionAll = []
+# res = []
+# stranicaStr=""
+# list_All_ref = []
+#
+# for url in urls:
+#     # Отправляем GET-запрос к указанной странице
+#     response = requests.get(url=url)
+#
+#     # Устанавливаем кодировку ответа сервера в UTF-8 для корректного отображения текста на кириллице
+#     response.encoding = 'utf-8'
+#
+#     # Преобразуем текст ответа сервера в объект BeautifulSoup с использованием парсера 'lxml'
+#     soup = BeautifulSoup(response.text, 'lxml')
+#
+#     pagen = [link['href'] for link in soup.find('div', class_='pagen').find_all('a')]
+#     schema = 'https://parsinger.ru/html/'
+#
+#     list_link = []
+#
+#     for link in pagen:
+#         list_link.append(f"{schema}{link}")
+#
+#
+#     for stranica in list_link:
+#
+#         response = requests.get(url=stranica)
+#         response.encoding = 'utf-8'
+#         soup = BeautifulSoup(response.text, 'lxml')
+#         for x in soup.find_all('a', class_='name_item'):
+#             nameAll.append(x.text.strip())
+#
+#         for x in soup.find_all('p', class_='price'):
+#             priceAll.append(x.text)
+#
+#         for x in soup.find_all('div', class_='description'):
+#             descriptionAll.append(x.text.strip().split('\n'))
+#
+#
+# for list_item, price_item, name in zip(descriptionAll, priceAll, nameAll):
+#
+#
+#                     res.append({
+#                         'Наименование': name,
+#                         [x.split(':')[0].strip() for x in list_item][0] : [x.split(':')[1].strip() for x in list_item][0],
+#                         [x.split(':')[0].strip() for x in list_item][1] : [x.split(':')[1].strip() for x in list_item][1],
+#                         [x.split(':')[0].strip() for x in list_item][2] : [x.split(':')[1].strip() for x in list_item][2],
+#                         [x.split(':')[0].strip() for x in list_item][3] : [x.split(':')[1].strip() for x in list_item][3],
+#                         'Цена': price_item
+#
+#                              })
+#
+# with open('res.json', 'w', encoding='utf-8') as file:
+#     json.dump(res, file, indent=4, ensure_ascii=False)
 
-nameAll = []
-priceAll = []
-descriptionAll = []
-res = []
-stranicaStr=""
-list_All_ref = []
 
-for url in urls:
-    # Отправляем GET-запрос к указанной странице
-    response = requests.get(url=url)
+# ____________________________________________________________________________________________________________________
+# Задача:"Провалитесь" в каждую карточку и соберите необходимую информацию.
+# Сохраните данные в JSON файл с использованием указанных параметров.
+# json.dump(res, file, indent=4, ensure_ascii=False)
 
-    # Устанавливаем кодировку ответа сервера в UTF-8 для корректного отображения текста на кириллице
-    response.encoding = 'utf-8'
+url = 'https://parsinger.ru/html/index2_page_1.html'
+# Отправляем GET-запрос к указанной странице
+response = requests.get(url=url)
 
-    # Преобразуем текст ответа сервера в объект BeautifulSoup с использованием парсера 'lxml'
-    soup = BeautifulSoup(response.text, 'lxml')
+# Устанавливаем кодировку ответа сервера в UTF-8 для корректного отображения текста на кириллице
+response.encoding = 'utf-8'
 
-    pagen = [link['href'] for link in soup.find('div', class_='pagen').find_all('a')]
-    schema = 'https://parsinger.ru/html/'
+# Преобразуем текст ответа сервера в объект BeautifulSoup с использованием парсера 'lxml'
+soup = BeautifulSoup(response.text, 'lxml')
 
-    list_link = []
+pagen = [link['href'] for link in soup.find('div', class_='pagen').find_all('a')]
+schema = 'https://parsinger.ru/html/'
 
-    for link in pagen:
-        list_link.append(f"{schema}{link}")
+# все страницы (4 стр)
+list_link = []
 
+for link in pagen:
+    list_link.append(f"{schema}{link}")
 
-    for stranica in list_link:
+card_link = []
+for stranica in list_link:
 
         response = requests.get(url=stranica)
         response.encoding = 'utf-8'
         soup = BeautifulSoup(response.text, 'lxml')
-        for x in soup.find_all('a', class_='name_item'):
+        for link in soup.findAll('a', class_='name_item'):
+            card_link.append(link['href'])
+
+schema_card = 'https://parsinger.ru/html/'
+
+all_cards = []
+for link in card_link:
+    all_cards.append(f"{schema_card}{link}")
+
+nameAll = []
+articleAll = []
+descriptionAll = []
+countAll = []
+priceAll = []
+old_priceAll = []
+for card in all_cards:
+
+        response = requests.get(url=card)
+        response.encoding = 'utf-8'
+        soup = BeautifulSoup(response.text, 'lxml')
+
+        for x in soup.find_all('p', id='p_header'):
             nameAll.append(x.text.strip())
 
-        for x in soup.find_all('p', class_='price'):
-            priceAll.append(x.text)
+        for x in soup.find_all('p', class_='article'):
+            articleAll.append(x.text)
 
-        for x in soup.find_all('div', class_='description'):
+        for x in soup.find_all('ul', id='description'):
             descriptionAll.append(x.text.strip().split('\n'))
 
+        for x in soup.find_all('span', id='in_stock'):
+            countAll.append(x.text)
 
-for list_item, price_item, name in zip(descriptionAll, priceAll, nameAll):
+        for x in soup.find_all('span', id='price'):
+            priceAll.append(x.text)
 
+        for x in soup.find_all('span', id='old_price'):
+            old_priceAll.append(x.text)
+
+res = []
+for description_item, price_item, name, old_price_item, article, count, linkTel in zip(descriptionAll, priceAll, nameAll, old_priceAll, articleAll, countAll, all_cards):
 
                     res.append({
-                        'Наименование': name,
-                        [x.split(':')[0].strip() for x in list_item][0] : [x.split(':')[1].strip() for x in list_item][0],
-                        [x.split(':')[0].strip() for x in list_item][1] : [x.split(':')[1].strip() for x in list_item][1],
-                        [x.split(':')[0].strip() for x in list_item][2] : [x.split(':')[1].strip() for x in list_item][2],
-                        [x.split(':')[0].strip() for x in list_item][3] : [x.split(':')[1].strip() for x in list_item][3],
-                        'Цена': price_item
+                        "categories": "mobile",
+                        'name': name,
+                        "article": article.split(':')[1].strip(),
+                        "description": {
+                            "brand": [x.split(':')[1].strip() for x in description_item][0],
+                            "model": [x.split(':')[1].strip() for x in description_item][1],
+                            "type": [x.split(':')[1].strip() for x in description_item][2],
+                            "material": [x.split(':')[1].strip() for x in description_item][3],
+                            "type_display": [x.split(':')[1].strip() for x in description_item][4],
+                            "diagonal": [x.split(':')[1].strip() for x in description_item][5],
+                            "size": [x.split(':')[1].strip() for x in description_item][6],
+                            "weight": [x.split(':')[1].strip() for x in description_item][7],
+                            "resolution": [x.split(':')[1].strip() for x in description_item][8],
+                            "site": [x.split(':')[1].strip() for x in description_item][9]
+                        },
+                           "count": count.split(':')[1].strip(),
+                           "price": price_item,
+                           "old_price": old_price_item,
+                           "link": linkTel
 
                              })
 
