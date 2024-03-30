@@ -102,11 +102,16 @@ from selenium.webdriver.common.by import By
 
 with webdriver.Chrome() as browser:
     browser.get('https://parsinger.ru/selenium/2/2.html')
-    element = browser.find_element(By.PARTIAL_LINK_TEXT, "16243162441624 ")
-    print(element.text)
+    element = browser.find_element(By.LINK_TEXT, "16243162441624")
+    print(element.click())
+    time.sleep(100)
 
 
 #               By.LINK_TEXT – Поиск элемента по точному тексту ссылки. Очень удобно, если текст уникален.
 # element = driver.find_element(By.LINK_TEXT, "Continue")
 #               By.PARTIAL_LINK_TEXT – Поиск элемента по частичному тексту ссылки. Удобно, когда точный текст ссылки неизвестен или динамичен.
 #  element = driver.find_element(By.PARTIAL_LINK_TEXT, "Cont")
+
+
+# ____________________________________________________________________________________________________________________
+# Задача:
