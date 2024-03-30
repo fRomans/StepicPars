@@ -81,14 +81,32 @@ from selenium.webdriver.common.by import By
 # Результат: Скопируйте текст, который появится на экране рядом с кнопкой, если вы уложились в трёхсекундный интервал.
 # Фиксация: Запишите результат в отдельную переменную
 
-with webdriver.Chrome() as browser:
-    browser.get('https://parsinger.ru/selenium/1/1.html')
-    els = browser.find_elements(By.CLASS_NAME, 'form')
-    # print(els)
+# with webdriver.Chrome() as browser:
+#     browser.get('https://parsinger.ru/selenium/1/1.html')
+#     # By.XPATH, "//div[@class='form_box']/input[1]"
+#     browser.find_element(By.NAME, "first_name").send_keys("Hello, World!")
+#     browser.find_element(By.NAME, "last_name").send_keys("Hello, World!")
+#     browser.find_element(By.NAME, "patronymic").send_keys("Hello, World!")
+#     browser.find_element(By.NAME, "age").send_keys("Hello, World!")
+#     browser.find_element(By.NAME, "city").send_keys("Hello, World!")
+#     browser.find_element(By.NAME, "email").send_keys("Hello, World!")
+#     browser.find_element(By.ID, "btn").click()
+#     time.sleep(5)
 
-    for el in els:
-        # Получаем первый и третий теги <p> внутри каждого div
-        first_p = el.send_keys("ирина турик")
-            # .send_keys('Text')
-        time.sleep(5)
-        print(el)
+
+# ____________________________________________________________________________________________________________________
+# Задача: Поиск Ссылки: Используйте метод By.PARTIAL_LINK_TEXT или By.LINK_TEXT для поиска ссылки с текстом 16243162441624.
+# Клик по Ссылке: Нажмите на найденную ссылку.
+# Получение Результата: Скопируйте текст, который появится в теге найденной страницы <p id="result"></p>.
+
+
+with webdriver.Chrome() as browser:
+    browser.get('https://parsinger.ru/selenium/2/2.html')
+    element = browser.find_element(By.PARTIAL_LINK_TEXT, "16243162441624 ")
+    print(element.text)
+
+
+#               By.LINK_TEXT – Поиск элемента по точному тексту ссылки. Очень удобно, если текст уникален.
+# element = driver.find_element(By.LINK_TEXT, "Continue")
+#               By.PARTIAL_LINK_TEXT – Поиск элемента по частичному тексту ссылки. Удобно, когда точный текст ссылки неизвестен или динамичен.
+#  element = driver.find_element(By.PARTIAL_LINK_TEXT, "Cont")
