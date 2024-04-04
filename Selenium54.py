@@ -255,7 +255,7 @@ with webdriver.Chrome() as browser:
     elYr5 = browser.find_element(By.XPATH, "//div[@id='text_box']")
     # преобразуем полученную строку - ((12434107696 * 3) * 2) + 1    в математическое выражение с помощью eval()
     y = eval(elYr5.text)
-    
+
     elements2 = browser.find_elements(By.XPATH, "//select[@id='selectId']/option")
     btn = browser.find_element(By.CLASS_NAME, "btn")
     res = browser.find_element(By.ID, "result")
