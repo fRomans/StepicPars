@@ -218,23 +218,55 @@ from selenium.webdriver.common.by import By
 # Задача: Получите значения всех элементов выпадающего списка.Сложите (плюсуйте) все извлеченные значения.
 # Вставьте получившийся результат в поле на сайте и нажмите кнопку.
 
+# with webdriver.Chrome() as browser:
+#
+#     browser.get('https://parsinger.ru/selenium/7/7.html')
+#
+#     elements2 = browser.find_elements(By.XPATH, "//select[@id='opt']/option")
+#     pole = browser.find_element(By.ID, "input_result")
+#     btn = browser.find_element(By.CLASS_NAME, "btn")
+#     res = browser.find_element(By.ID, "result")
+#
+#     sum = 0
+#     for i, element in enumerate(elements2):
+#             chis = int(element.text)
+#             sum += chis
+#
+#     pole.send_keys(sum)
+#     btn.click()
+#     print(res.text)
+
+
+    # ____________________________________________________________________________________________________________________
+# Задача:Найдите значение математического уравнения ((12434107696 * 3) * 2) + 1.Откройте выпадающий список и выберите элемент с
+# числом, которое у вас получилось на предыдущем этапе.Нажмите на кнопку на странице, если значение верное, вы получите код.
+
+# y = ((12434107696 * 3) * 2) + 1
+
+
 with webdriver.Chrome() as browser:
 
-    browser.get('https://parsinger.ru/selenium/7/7.html')
+    browser.get('https://parsinger.ru/selenium/6/6.html')
 
-    elements2 = browser.find_elements(By.XPATH, "//select[@id='opt']/option")
-    pole = browser.find_element(By.ID, "input_result")
+    # elYr1 = browser.find_element(By.XPATH, "//div[@id='text_box']/span[1]")
+    # elYr2 = browser.find_element(By.XPATH, "//div[@id='text_box']/span[2]")
+    # elYr3 = browser.find_element(By.XPATH, "//div[@id='text_box']/span[3]")
+    # elYr4 = browser.find_element(By.XPATH, "//div[@id='text_box']/span[4]")
+    elYr5 = browser.find_element(By.XPATH, "//div[@id='text_box']")
+    # преобразуем полученную строку - ((12434107696 * 3) * 2) + 1    в математическое выражение с помощью eval()
+    y = eval(elYr5.text)
+    
+    elements2 = browser.find_elements(By.XPATH, "//select[@id='selectId']/option")
     btn = browser.find_element(By.CLASS_NAME, "btn")
     res = browser.find_element(By.ID, "result")
 
-    sum = 0
-    for i, element in enumerate(elements2):
-            chis = int(element.text)
-            sum += chis
 
-    pole.send_keys(sum)
-    btn.click()
-    print(res.text)
+    for i, element in enumerate(elements2):
+        x = int(element.text)
+        if y == x:
+            element.click()
+            btn.click()
+            print(res.text)
 
 
 
